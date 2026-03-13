@@ -1,0 +1,11 @@
+li {
+  list-style: none;
+}
+
+.newCustomer {
+  display: none;
+}
+
+.detailsCustomer {
+  display: '';
+}

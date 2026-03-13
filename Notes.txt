@@ -1,0 +1,7 @@
+﻿- SPA .net angular app
+
+- Entity framework
+
+- DbContext
+
+- Async

@@ -41,7 +41,7 @@ namespace InvoiceTrackerApp.Controllers
             }
             return Ok(userResult);
         }
-
+                
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteCustomerAsync(int id)
         {

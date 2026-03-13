@@ -7,8 +7,11 @@ const PROXY_CONFIG = [
   {
     context: [
       "/weatherforecast",
+      "/api/customer/get/",     
+      "/api/customer/add",
       "/api/customer/all",
-      "/api/customer/add"
+      "/api/customer/delete/",
+      "/api/customer/update"
    ],
     proxyTimeout: 10000,
     target: target,

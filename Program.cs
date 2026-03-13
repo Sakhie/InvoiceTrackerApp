@@ -1,6 +1,7 @@
 using InvoiceTrackerApp.Persistance;
 using InvoiceTrackerApp.Services;
 using InvoiceTrackerApp.Services.Interfaces;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +16,14 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 builder.Services.AddControllersWithViews();
 
-//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen();
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

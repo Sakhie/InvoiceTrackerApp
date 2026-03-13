@@ -1,4 +1,4 @@
-import { Component, OnInit, LOCALE_ID, Inject, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, LOCALE_ID, Inject, ChangeDetectorRef } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { CommonModule, formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -12,18 +12,18 @@ import { CustomerService } from '../../services/customer.service';
   styleUrls: ['./customer-form.component.css'],
   standalone: true
 })
-export class CustomerForm implements OnInit {
+export class CustomerFormComponent implements OnInit {
 
   customerForm: FormGroup;
   currentId?: number;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private customerService: CustomerService,
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(LOCALE_ID) private local: string
+    private readonly formBuilder: FormBuilder,
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly customerService: CustomerService,
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    @Inject(LOCALE_ID) private readonly local: string
   ) {
 
     this.customerForm = this.formBuilder.group({
@@ -90,7 +90,7 @@ export class CustomerForm implements OnInit {
       if (data && data.id > 0) {
         console.log("Successfully created...");
 
-        this.router.navigate(['/customer']);
+        this.router.navigate(['/customer-list']);
       } else {
         console.log("Something went wrong...");
       }
@@ -114,7 +114,7 @@ export class CustomerForm implements OnInit {
       }
     ).subscribe((updated) => {
       if (updated) {
-        this.router.navigate(["/customers"]);
+        this.router.navigate(['/customer-list']);
       } else {
         console.log("Something went wrong...");
       }
@@ -130,7 +130,7 @@ export class CustomerForm implements OnInit {
 
         this.customerService.delete(this.currentId).subscribe((deleted) => {
           if (deleted) {
-            this.router.navigate(["/customers"]);
+            this.router.navigate(['/customer-list']);
           } else {
             console.log("Something went wrong...");
           }

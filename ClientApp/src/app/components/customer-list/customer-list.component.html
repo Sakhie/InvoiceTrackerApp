@@ -1,0 +1,50 @@
+<div class="row mb-4 g-4">
+  <div class="col-md-4 ">
+    <div (click)="filterBy('income')" class="card h-100 bg-success bg-opacity-75 text-white">
+      <div class="card-body">
+        <h5 class="card-title">Income</h5>
+        <h3 class="card-title">{{incomeSummary() | currency:'R'}}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 ">
+    <div (click)="filterBy('expense')" class="card h-100 bg-danger bg-opacity-75 text-white">
+      <div class="card-body">
+        <h5 class="card-title">Expenses</h5>
+        <h3 class="card-title">{{expenseSummary() | currency:'R'}}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h1 id="tableLabel">Customers</h1>
+
+<p *ngIf="!customers?.length"><em>Loading...</em></p>
+
+<div class="ms-auto">
+  <a class="btn btn-outline-dark me-2"
+     (click)="AddNew()">
+    <li class="bi bi-plus-circle"> Add New</li>
+  </a>
+
+  <div id="filter-caption" style="display:none">Filtered by</div>
+</div>
+
+<table class="table table-striped py-2 table-hover align-middle" *ngIf="customers.length">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let cust of customers"
+        class="trans-row"
+        (click)="viewDetails(cust.id)">
+      <td>{{ cust.id }}</td>
+      <td>{{ cust.name }}</td>
+      <td>{{ cust.number }}</td>
+    </tr>
+  </tbody>
+</table>

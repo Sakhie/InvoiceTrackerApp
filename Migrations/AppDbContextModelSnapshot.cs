@@ -74,8 +74,6 @@ namespace InvoiceTrackerApp.Migrations
 
                     b.HasKey("InvoiceNumber");
 
-                    b.HasIndex("CustomerId");
-
                     b.ToTable("Invoices");
                 });
 
@@ -98,15 +96,16 @@ namespace InvoiceTrackerApp.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("InvoiceTrackerApp.Models.InvoiceModel", b =>
+            modelBuilder.Entity("InvoiceTrackerApp.Models.UserRoleModel", b =>
                 {
-                    b.HasOne("InvoiceTrackerApp.Models.CustomerModel", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("Permission")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Navigation("Customer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.ToTable("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,18 +1,15 @@
-using InvoiceTrackerApp.Persistance;
-using InvoiceTrackerApp.Services;
-using InvoiceTrackerApp.Services.Interfaces;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
+using InvoiceTrackerApp;
+using InvoiceTrackerApp.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<AppDbContext>(opt=> opt.UseSqlServer(
-    builder.Configuration.GetConnectionString("DefaultConnection")
-));
-
-builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddAppSettings(builder.Configuration);
+//builder.Services.AddAppCors(builder.Configuration);
+builder.Services.AddAppAuthentication(builder.Configuration);
+builder.Services.AddAppServices();
 
 builder.Services.AddControllersWithViews();
 
@@ -25,6 +22,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -36,6 +35,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+//app.UseCors("AllowAll");
 
 app.MapControllerRoute(
     name: "default",

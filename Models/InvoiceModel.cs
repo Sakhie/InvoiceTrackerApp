@@ -7,7 +7,7 @@ namespace InvoiceTrackerApp.Models
     {
         [Key]
         public int InvoiceNumber { get; set; }
-        public required CustomerModel Customer { get; set; }
+        public required int CustomerId { get; set; }
         public DateTime InvoiceDate { get; set; }
         public DateTime DueDate { get; set; }
         public decimal InvoiceAmount { get; set; }

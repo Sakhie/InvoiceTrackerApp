@@ -6,12 +6,20 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 const PROXY_CONFIG = [
   {
     context: [
-      "/weatherforecast",
-      "/api/customer/get/",     
+      "/api/user/signup",
+      "/api/user/signin",
+
+      "/api/invoice/get/",
+      "/api/invoice/add",
+      "/api/invoice/all",
+      "/api/invoice/delete/",
+      "/api/invoice/update",
+
+      "/api/customer/get/",
       "/api/customer/add",
       "/api/customer/all",
       "/api/customer/delete/",
-      "/api/customer/update"
+      "/api/customer/update",
    ],
     proxyTimeout: 10000,
     target: target,

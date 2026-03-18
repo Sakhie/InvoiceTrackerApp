@@ -21,14 +21,14 @@
           {{currentId ? "Update" : "Submit"}}
         </button>
         
-  <button type="button"
-          class="btn btn-danger col-md-3 mx-4 {{currentId ? 'detailsCustomer' : 'newCustomer'}}"
-          (click)="deleteCustomer()">
-    Delete
-  </button>
+        <button type="button"
+                class="btn btn-danger col-md-3 mx-4 {{currentId ? 'detailsCustomer' : 'newCustomer'}}"
+                (click)="deleteCustomer()">
+          Delete
+        </button>
 
-  <a class="nav-link px-2 link-secondary col-md-3 "
-     [routerLink]="['/customer-list']">Cancel</a>
+        <a class="nav-link px-2 link-secondary col-md-3 "
+           [routerLink]="['/customer-list']">Cancel</a>
     
       </div>
     </form>

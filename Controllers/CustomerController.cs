@@ -12,12 +12,12 @@ namespace InvoiceTrackerApp.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAllCustomersAsync()
         {
-            var usersResult = await _customerService.GetAllCustomersAsync();
-            if (usersResult == null)
+            var customersResult = await _customerService.GetAllCustomersAsync();
+            if (customersResult == null)
             {
-                return BadRequest("Failed retrieving users");
+                return BadRequest("Failed retrieving customers");
             }
-            return Ok(usersResult);
+            return Ok(customersResult);
         }
 
         [HttpPost("add")]

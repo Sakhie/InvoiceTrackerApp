@@ -63,6 +63,24 @@ namespace InvoiceTrackerApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            /*
+            migrationBuilder.CreateTable(
+               name: "UserRoles",
+               columns: table => new
+               {
+                   UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                   Permission = table.Column<string>(type: "nvarchar(max)", nullable: false)
+               },
+                constraints: table =>
+                {                    
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });*/
+
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_CustomerId",
                 table: "Invoices",
@@ -80,6 +98,10 @@ namespace InvoiceTrackerApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
+
+            /*
+            migrationBuilder.DropTable(
+                name: "UserRoles");*/
         }
     }
 }

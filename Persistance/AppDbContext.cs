@@ -13,5 +13,6 @@ namespace InvoiceTrackerApp.Persistance
         public DbSet<UserModel> Users { get; set; }
         public DbSet<CustomerModel> Customers { get; set; }
         public DbSet<InvoiceModel> Invoices { get; set; }
+        public DbSet<UserRoleModel> UserRoles { get; set; }
     }
 }

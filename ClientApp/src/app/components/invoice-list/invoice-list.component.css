@@ -1,0 +1,73 @@
+.invoice-title{
+  font-weight: bold;
+  font-size:larger;
+}
+.btitle {
+  font-weight: bold;
+}
+
+
+.filter {
+  color: darkorange;
+  display: none !important;
+}
+.clear-filter{
+    cursor: pointer;
+}
+
+.newItem td {
+  background-color: aquamarine;
+  transition: background-color 0.5s ease-in-out;
+}
+
+li {
+  list-style: none;
+}
+
+.income td {
+  color: green;
+  opacity: 75%;
+}
+
+.expense td {
+  color: red;
+  opacity: 75%;
+}
+
+.card:hover {
+  cursor: pointer;
+}
+
+
+div.PartiallyPaid {
+  background-color: blue;
+  opacity: 60%
+}
+div.UnPaid {
+  background-color: darkorange;
+  opacity: 60%
+}
+div.Paid {
+  background-color: forestgreen;
+  opacity: 60%
+}
+div.OverDue {
+  background-color: red;
+  opacity: 60%
+}
+
+tr.PartiallyPaid td {
+  color: blue;
+}
+
+tr.UnPaid td{
+  color: darkorange;
+}
+
+tr.Paid td {
+  color: forestgreen;
+}
+
+tr.OverDue td {
+   color: red;
+}

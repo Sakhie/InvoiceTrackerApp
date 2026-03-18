@@ -1,0 +1,109 @@
+<div class="row mb-4 g-4">
+  <div class="col-md-3 ">
+    <div (click)="filterBy('Paid')" class="card h-100 Paid text-white">
+      <div class="card-body">
+        <h5 class="card-title">Paid</h5>
+        <h3 class="card-title">{{getSummaryByStatusId(2)}}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 ">
+    <div (click)="filterBy('PartiallyPaid')" class="card h-100 PartiallyPaid text-white">
+      <div class="card-body">
+        <h5 class="card-title">Partially Paid</h5>
+        <h3 class="card-title">{{getSummaryByStatusId(1)}}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 ">
+    <div (click)="filterBy('UnPaid')" class="card h-100 UnPaid text-white">
+      <div class="card-body">
+        <h5 class="card-title">UnPaid</h5>
+        <h3 class="card-title">{{getSummaryByStatusId(0)}}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 ">
+    <div (click)="filterBy('OverDue')" class="card h-100 OverDue text-white">
+      <div class="card-body">
+        <h5 class="card-title">Over Due</h5>
+        <h3 class="card-title">{{ getSummaryByStatusId(3)}}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4 g-4">
+
+    <div class="col-md-6 d-flex">
+      <span id="tableLabel" class="col-md-3 invoice-title">Invoices</span>
+
+      <a class="btn me-2 col-md-3"
+         (click)="AddNew()">
+        <li class="bi bi-plus-circle"> Add New</li>
+      </a>
+
+      <div id="filter" style="display:none;" class="col-md-6 filter my-2 d-flex">
+        <div id="filter-caption" class="col-md-6">
+          filter by
+        </div>
+        <div class="col-md-6 clear-filter">
+          <a (click)='clearFilter()'>[ Clear ]</a>
+        </div>        
+      </div>
+    </div>
+
+    <div class="col-md-6 d-flex">
+
+      <div class="card h-2 col-md-5 mx-2">
+        <div class="card-body">
+          <span class="card-title btitle">Total Outstanding</span>
+          <span class="card-title mx-2">: {{getBalanceSummary() | currency:'R'}}</span>
+        </div>
+      </div>
+
+      <div class="card h-2 col-md-5 mx-2">
+        <div class="card-body">
+          <span class="card-title btitle">Total Paid</span>
+          <span class="card-title mx-2">: {{getPaidSummary() | currency:'R'}}</span>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+
+  <p *ngIf="!invoices?.length"><em>Loading...</em></p>
+
+  <table class="table table-striped py-2 table-hover align-middle" *ngIf="invoices.length">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Customer</th>
+        <th scope="col">InvoiceDate</th>
+
+        <th scope="col">DueDate</th>
+        <th scope="col">InvoiceAmount</th>
+        <th scope="col">PaidAmount</th>
+        <th scope="col">Balance</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let inv of invoices"
+          class="trans-row"
+          [ngClass]="inv.statusId | invoiceStatusPipe:true"
+          (click)="viewDetails(inv.invoiceNumber)">
+        <td>{{ inv.invoiceNumber }}</td>
+        <td>{{ inv.customerId | invoiceCustomerPipe: customers }}</td>
+        <td>{{ inv.invoiceDate | date:'MM/dd/yyyy, h:mm a' }}</td>
+
+        <td>{{ inv.dueDate | date:'MM/dd/yyyy, h:mm a' }}</td>
+        <td>{{ inv.invoiceAmount | currency:'R' }}</td>
+        <td>{{ inv.paidAmount | currency:'R'  }}</td>
+        <td>{{ inv.balance | currency:'R'  }}</td>
+        <td>{{ inv.statusId | invoiceStatusPipe }}</td>
+      </tr>
+    </tbody>
+  </table>

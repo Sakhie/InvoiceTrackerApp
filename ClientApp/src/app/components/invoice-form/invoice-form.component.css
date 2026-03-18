@@ -1,0 +1,16 @@
+li {
+  list-style: none;
+}
+
+.newinvoice {
+  display: none;
+}
+
+.detailsinvoice {
+  display: '';
+}
+.customer-select {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}

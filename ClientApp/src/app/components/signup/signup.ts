@@ -69,7 +69,7 @@ export class Signup implements OnInit {
   postSubmit(userResponse: UserResponse) {
     if (userResponse) {
       this.token = userResponse.token;
-      console.log("Successfully logged in...token:" + userResponse.token);      
+      console.log("Successfully logged in...");      
 
       this.router.navigate(['/invoice-list']);
     } else {

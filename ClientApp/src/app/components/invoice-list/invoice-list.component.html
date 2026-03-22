@@ -39,7 +39,7 @@
       <span id="tableLabel" class="col-md-3 invoice-title">Invoices</span>
 
       <a class="btn me-2 col-md-3"
-         *ngIf="userService.currentUserRole$ | async"
+         *ngIf="userService.isAdmin()"
          (click)="AddNew()">
         <li class="bi bi-plus-circle"> Add New</li>
       </a>

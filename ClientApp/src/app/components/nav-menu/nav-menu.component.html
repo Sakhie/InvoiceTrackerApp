@@ -1,9 +1,9 @@
 <header>
   <nav
-    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-white border-bottom box-shadow mb-3"
+    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3"
   >
     <div class="container">
-      <a class="navbar-brand text-dark" [routerLink]="['/']">InvoiceTrackerApp</a>
+      <a class="navbar-brand text-dark" [routerLink]="['/']">Invoice Tracker</a>
       <button class="navbar-toggler"
               type="button"
               data-toggle="collapse"
@@ -17,42 +17,38 @@
            [ngClass]="{ show: isExpanded }">
         <ul class="navbar-nav flex-grow">                   
 
-          <li class="nav-item" *ngIf="userService.currentUserRole$ | async" [routerLinkActive]="['link-active']">
+          <li class="nav-item" *ngIf="userService.isAdmin()" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" [routerLink]="['/customer-list']">Customers</a>
           </li>
 
-          <li class="nav-item" *ngIf="userService.currentUser$ | async" [routerLinkActive]="['link-active']">
+          <li class="nav-item" *ngIf="userService.isAuthenticated()" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" [routerLink]="['/invoice-list']">Invoices</a>
           </li>
 
         </ul>
       </div>
 
-      <div class="text-end flex-auto">
-        <div
-          class="me-2"
-          *ngIf="userService.currentUser$ | async"
-        >four@test.com</div>
-
+      <div class="text-end flex-grow">
+        <a class="me-2 current-user mx-4"
+             *ngIf="userService.isAuthenticated()">
+          {{userService.userDisplayName()}}
+        </a>
         <a class="btn btn-outline-dark me-2"
-           *ngIf="!(userService.currentUser$ | async)"
+           *ngIf="!userService.isAuthenticated()"
            [routerLink]="'/login'">
           <li class="bi-box-arrow-in-right"> login</li>
         </a>
-
         <a class="btn btn-outline-dark me-2"
-           *ngIf="userService.currentUser$ | async"
+           *ngIf="userService.isAuthenticated()"
            (click)="logout()">
           <li class="bi bi-box-arrow-right me-1"> logout</li>
         </a>
-
         <a class="btn btn-outline-dark me-2"
-           *ngIf="!(userService.currentUser$ | async)"
+           *ngIf="!userService.isAuthenticated()"
            [routerLink]="'/signup'">
           <li class="bi-box-arrow-in-right"> signup</li>
         </a>
       </div>
-
     </div>
   </nav>
 </header>

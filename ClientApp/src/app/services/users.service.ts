@@ -15,14 +15,7 @@ import { TokenClaims } from '../models/tokenClaims';
 export class UserService {
 
   private readonly _baseUrl: string;
-  private readonly currentUserSubject = new BehaviorSubject<string | null>(null);
-  private readonly currentUserRoleSubject = new BehaviorSubject<string | null>(null);
-
   private readonly currentUserInfoSubject = new BehaviorSubject<TokenClaims | null>(null);
-
-  currentUser$ = this.currentUserSubject.asObservable();
-  currentUserRole$ = this.currentUserRoleSubject.asObservable();
-
   currentUserInfo$ = this.currentUserInfoSubject.asObservable();
 
   constructor(
@@ -32,11 +25,6 @@ export class UserService {
     private readonly router: Router
   ) {
       this._baseUrl = baseUrl + 'api/user';
-
-      const token = localStorageService.getItem("userToken");
-      if (token) {
-        this.currentUserSubject.next('user');
-      }
   }
 
   signup(user: User): Observable<UserResponse> {
@@ -75,23 +63,28 @@ export class UserService {
   userInfo(token: string | null): void {
     if (token) {
 
-      this.localStorageService.setItem('userToken', token);
-      this.currentUserSubject.next('user');
+      const currentUser: TokenClaims = {
+        NameIdentifier: "",
+        EmailAddress: "",
+        Role: ""
+      };
 
+      this.localStorageService.setItem('userToken', token);
       try {
-        const decodedClaims = jwtDecode<TokenClaims>(token);
+        const decodedClaims = jwtDecode<TokenClaims>(token);        
 
         console.log("Name:", decodedClaims.NameIdentifier +
           ", Email:" + decodedClaims.EmailAddress +
           "role:" + decodedClaims.Role);
 
-        this.localStorageService.setItem('userEmail', decodedClaims.EmailAddress);
+        currentUser.NameIdentifier = decodedClaims.NameIdentifier;
+        currentUser.EmailAddress = decodedClaims.EmailAddress;
         if (decodedClaims?.Role) {
-          this.localStorageService.setItem('userRole', decodedClaims.Role);
-          if (decodedClaims.Role == "admin") {
-            this.currentUserRoleSubject.next('admin');
-          }
+          currentUser.Role = decodedClaims?.Role;
         }
+        this.currentUserInfoSubject.next(currentUser);
+
+        this.localStorageService.setItem('userInfo', currentUser);
 
       } catch (error) {
         console.error('Error decoding token (checkRoles):', error);
@@ -99,22 +92,30 @@ export class UserService {
     }
   }
 
-  isAuthenticated(): boolean{
-    return !!this.localStorageService.getItem("userToken");
-  }
+  
 
   logout(): void {
     this.localStorageService.removeItem('userToken');
-    this.localStorageService.removeItem('userRole');
-    this.localStorageService.removeItem('userEmail');
-
-    this.currentUserSubject.next(null);
-    this.currentUserRoleSubject.next(null);
+    this.localStorageService.removeItem('userInfo');
+    this.currentUserInfoSubject.next(null);
 
     this.router.navigate(['']);
   }
 
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
   getToken(): string | null {
     return this.localStorageService.getItem("userToken");
   }
+  getUserInfo(): TokenClaims | null {
+    return this.localStorageService.getItem("userInfo");
+  }
+  isAdmin() {
+    return this.getUserInfo()?.Role == 'admin';
+  }
+  userDisplayName() {
+    return this.getUserInfo()?.EmailAddress;
+  }
+
 }

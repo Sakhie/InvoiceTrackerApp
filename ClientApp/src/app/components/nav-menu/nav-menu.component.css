@@ -27,3 +27,9 @@ li {
 .isLoggedIn {
   display: '' !important;
 }
+.current-user {
+  text-decoration: none;
+}
+.navbar {
+  background-color: azure;
+}

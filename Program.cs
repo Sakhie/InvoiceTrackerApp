@@ -1,4 +1,5 @@
 using InvoiceTrackerApp;
+using InvoiceTrackerApp.Filters;
 using InvoiceTrackerApp.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -11,7 +12,9 @@ builder.Services.AddAppSettings(builder.Configuration);
 builder.Services.AddAppAuthentication(builder.Configuration);
 builder.Services.AddAppServices();
 
-builder.Services.AddControllersWithViews();
+ builder.Services.AddControllersWithViews(options => {
+    options.Filters.Add<ApiAuthorizationFilter>();
+});
 
 builder.Services.AddSwaggerGen();
 var app = builder.Build();

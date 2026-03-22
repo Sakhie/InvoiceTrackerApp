@@ -4,6 +4,7 @@ import { Customer } from '../../models/customer';
 import { CustomerService } from '../../services/customer.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../../services/users.service';
 
 @Component({
   selector: 'customer-list',
@@ -20,7 +21,8 @@ export class CustomerListComponent implements OnInit{
     @Inject('BASE_URL') baseUrl: string,
     private readonly customerService: CustomerService,
     private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly router: Router
+    private readonly router: Router,
+    public userService: UserService
   ) {
 
     const customersEndPoint = baseUrl + 'api/customer/all';
@@ -60,7 +62,5 @@ export class CustomerListComponent implements OnInit{
   filterBy(filterBy: string) {
     console.log("filering by :" + filterBy);
   }
-
-
 
 }

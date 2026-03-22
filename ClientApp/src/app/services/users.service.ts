@@ -1,8 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user';
 import { UserResponse } from '../models/userResponse';
+import { LocalStorageService } from '../services/local-storage.service';
+import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
+import { TokenClaims } from '../models/tokenClaims';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +15,28 @@ import { UserResponse } from '../models/userResponse';
 export class UserService {
 
   private readonly _baseUrl: string;
-  constructor(private http: HttpClient,
-    @Inject('BASE_URL') baseUrl: string
+  private readonly currentUserSubject = new BehaviorSubject<string | null>(null);
+  private readonly currentUserRoleSubject = new BehaviorSubject<string | null>(null);
+
+  private readonly currentUserInfoSubject = new BehaviorSubject<TokenClaims | null>(null);
+
+  currentUser$ = this.currentUserSubject.asObservable();
+  currentUserRole$ = this.currentUserRoleSubject.asObservable();
+
+  currentUserInfo$ = this.currentUserInfoSubject.asObservable();
+
+  constructor(
+    private readonly http: HttpClient,
+    @Inject('BASE_URL') baseUrl: string,
+    private readonly localStorageService: LocalStorageService,
+    private readonly router: Router
   ) {
-    this._baseUrl = baseUrl + 'api/user';    
+      this._baseUrl = baseUrl + 'api/user';
+
+      const token = localStorageService.getItem("userToken");
+      if (token) {
+        this.currentUserSubject.next('user');
+      }
   }
 
   signup(user: User): Observable<UserResponse> {
@@ -24,10 +47,13 @@ export class UserService {
     const endpoint = this._baseUrl + "/signup";
     console.log("signup user endpoint: " + endpoint);
 
-    const token = this.http.post<UserResponse>(endpoint, user);
-
-    console.log('service response...token (' + token + ")");
-    return token;
+    return this.http.post<UserResponse>(endpoint, user)
+      .pipe(
+        tap((response) => {
+          this.userInfo(response.token);
+          
+        })
+      )
   }
 
   signin(user: User): Observable<UserResponse> {
@@ -38,17 +64,57 @@ export class UserService {
     const endpoint = this._baseUrl + "/signin";
     console.log("login user endpoint: " + endpoint);
 
-    return this.http.post<UserResponse>(endpoint, user);
+    return this.http.post<UserResponse>(endpoint, user)
+      .pipe(
+        tap((response) => {
+          this.userInfo(response.token);          
+        })
+      )
   }
 
-  test(): Observable<string> {
-    console.log('service call...');
+  userInfo(token: string | null): void {
+    if (token) {
 
-    const endpoint = this._baseUrl + "/test";
-    console.log("test endpoint: " + endpoint);
+      this.localStorageService.setItem('userToken', token);
+      this.currentUserSubject.next('user');
 
-    return this.http.get<string>(endpoint);
+      try {
+        const decodedClaims = jwtDecode<TokenClaims>(token);
+
+        console.log("Name:", decodedClaims.NameIdentifier +
+          ", Email:" + decodedClaims.EmailAddress +
+          "role:" + decodedClaims.Role);
+
+        this.localStorageService.setItem('userEmail', decodedClaims.EmailAddress);
+        if (decodedClaims?.Role) {
+          this.localStorageService.setItem('userRole', decodedClaims.Role);
+          if (decodedClaims.Role == "admin") {
+            this.currentUserRoleSubject.next('admin');
+          }
+        }
+
+      } catch (error) {
+        console.error('Error decoding token (checkRoles):', error);
+      }
+    }
   }
 
-  
+  isAuthenticated(): boolean{
+    return !!this.localStorageService.getItem("userToken");
+  }
+
+  logout(): void {
+    this.localStorageService.removeItem('userToken');
+    this.localStorageService.removeItem('userRole');
+    this.localStorageService.removeItem('userEmail');
+
+    this.currentUserSubject.next(null);
+    this.currentUserRoleSubject.next(null);
+
+    this.router.navigate(['']);
+  }
+
+  getToken(): string | null {
+    return this.localStorageService.getItem("userToken");
+  }
 }

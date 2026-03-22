@@ -33,18 +33,27 @@
       <div class="row form-group py-4">
         <button type="submit"
                 class="btn btn-primary col-md-3"
+                *ngIf="userService.currentUserRole$ | async"
                 [disabled]="!invoiceForm.valid">
           {{currentId ? "Update" : "Submit"}}
         </button>
 
+        <div class="spinner-border col-md-3 mx-4"
+             *ngIf="isLoading"
+             role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+
         <button type="button"
+                *ngIf="userService.currentUserRole$ | async"
                 class="btn btn-danger col-md-3 mx-4 {{currentId ? 'detailsinvoice' : 'newinvoice'}}"
                 (click)="deleteinvoice()">
           Delete
         </button>
 
         <a class="nav-link px-2 link-secondary col-md-3 "
-           [routerLink]="['/invoice-list']">Cancel</a>
+           *ngIf="!isLoading"
+           [routerLink]="['/invoice-list']">Back</a>
 
       </div>
     </form>

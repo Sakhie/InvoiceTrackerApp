@@ -10,7 +10,13 @@
 
 - Proxy
 
+- Api filters
+	- global
+	- Per endpoint
+
 
 ---Assumptions Invoice ---
 - Cann't change customer on the invoice
+
+
 

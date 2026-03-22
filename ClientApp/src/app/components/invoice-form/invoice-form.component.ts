@@ -1,11 +1,11 @@
 import { Component, OnInit, LOCALE_ID, Inject, ChangeDetectorRef } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
 import { CommonModule, formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { InvoiceService } from '../../services/invoice.service';
 import { CustomerService } from '../../services/customer.service';
 import { Customer } from '../../models/customer';
+import { UserService } from '../../services/users.service';
 
 @Component({
   selector: 'invoice-form',
@@ -19,6 +19,7 @@ export class InvoiceFormComponent implements OnInit {
   invoiceForm: FormGroup;
   currentId?: number;
   public customers: Customer[] = [];
+  public isLoading: boolean = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -27,7 +28,8 @@ export class InvoiceFormComponent implements OnInit {
     private readonly invoiceService: InvoiceService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly customerService: CustomerService,
-    @Inject(LOCALE_ID) private readonly local: string
+    @Inject(LOCALE_ID) private readonly local: string,
+    public userService: UserService
   ) {
 
     this.invoiceForm = this.formBuilder.group({
@@ -36,15 +38,7 @@ export class InvoiceFormComponent implements OnInit {
       invoiceAmount: new FormControl('', Validators.required),
       paidAmount: new FormControl('', Validators.required)
     });
-
-    /*
-    this.invoiceForm = this.formBuilder.group({
-      customerId: ['', Validators.required],
-      dueDate: ['', Validators.required],
-      invoiceAmount: ['', Validators.required, Validators.min(0)],
-      paidAmount: ['', Validators.required]
-    });
-    */
+    
   }
 
   ngOnInit(): void {
@@ -84,8 +78,6 @@ export class InvoiceFormComponent implements OnInit {
           invoiceAmount: invoice.invoiceAmount,
           paidAmount: invoice.paidAmount
         });
-                
-        //document.getElementById("customerId")?.classList.add("customer-select");
         
       },
 
@@ -98,6 +90,8 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   submitForm() {
+    this.isLoading = !this.isLoading;
+
     if (this.currentId) {
       this.updateDetails(this.currentId);
     } else {

@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
@@ -11,38 +11,43 @@ import { CustomerFormComponent } from './components/customer-form/customer-form.
 import { InvoiceListComponent } from './components/invoice-list/invoice-list.component';
 import { InvoiceFormComponent } from './components/invoice-form/invoice-form.component';
 import { Signup } from './components/signup/signup';
-import { Login } from './components/login/login';
+import { AuthGuard } from './guards/auth.guard';
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { allInterceptor } from './interceptors/all.interceptor';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
-    HomeComponent
+    HomeComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    NavMenuComponent,
     CustomerListComponent,
     CustomerFormComponent,
     InvoiceListComponent,
     InvoiceFormComponent,
-    Login,
     Signup,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'customer-list', component: CustomerListComponent },
-      { path: 'customer-form', component: CustomerFormComponent },
-      { path: 'customer-form/:id', component: CustomerFormComponent },
-      { path: 'invoice-list', component: InvoiceListComponent },
-      { path: 'invoice-form', component: InvoiceFormComponent },
-      { path: 'invoice-form/:id', component: InvoiceFormComponent },
+      { path: 'customer-list', component: CustomerListComponent, canActivate: [AuthGuard] },
+      { path: 'customer-form', component: CustomerFormComponent, canActivate: [AuthGuard] },
+      { path: 'customer-form/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },
+      { path: 'invoice-list', component: InvoiceListComponent, canActivate: [AuthGuard] },
+      { path: 'invoice-form', component: InvoiceFormComponent, canActivate: [AuthGuard] },
+      { path: 'invoice-form/:id', component: InvoiceFormComponent, canActivate: [AuthGuard] },
 
       { path: 'signup', component: Signup },
       { path: 'login', component: Signup }
     ])
   ],
-  providers: [],
+  providers: [
+    provideHttpClient(withInterceptors([authInterceptor, allInterceptor]))
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

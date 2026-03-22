@@ -23,6 +23,7 @@
 
 <div class="ms-auto">
   <a class="btn btn-outline-dark me-2"
+     *ngIf="userService.currentUserRole$ | async"
      (click)="AddNew()">
     <li class="bi bi-plus-circle"> Add New</li>
   </a>

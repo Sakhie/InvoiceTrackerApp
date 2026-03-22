@@ -37,8 +37,11 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\components\invoice-form\invoice-form.component.ts" />
+    <None Remove="ClientApp\src\app\interceptors\all.interceptor.ts" />
+    <None Remove="ClientApp\src\app\interceptors\auth.interceptor.ts" />
     <None Remove="ClientApp\src\app\models\customer.ts" />
     <None Remove="ClientApp\src\app\models\InvoiceStatus.ts" />
+    <None Remove="ClientApp\src\app\models\tokenClaims.ts" />
     <None Remove="ClientApp\src\app\models\user.ts" />
     <None Remove="ClientApp\src\app\models\UserResponse.ts" />
     <None Remove="ClientApp\src\app\services\customer.service.spec.ts" />
@@ -46,7 +49,7 @@
     <None Remove="ClientApp\src\app\services\invoice.service.spec.ts" />
     <None Remove="ClientApp\src\app\services\invoice.service.ts" />
     <None Remove="ClientApp\src\app\services\local-storage.service.ts" />
-    <None Remove="ClientApp\src\app\services\user.service.spec.ts" />
+    <None Remove="ClientApp\src\app\services\users.service.spec.ts" />
     <None Remove="ClientApp\src\app\services\users.service.ts" />
   </ItemGroup>
 
@@ -58,12 +61,17 @@
     <TypeScriptCompile Include="ClientApp\src\app\components\invoice-form\invoice-form.component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\interceptors\all.interceptor.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\interceptors\auth.interceptor.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\customer.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\InvoiceStatus.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\models\tokenClaims.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\user.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\userResponse.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\local-storage.service.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\services\user.service.spec.ts">
+    <TypeScriptCompile Include="ClientApp\src\app\services\users.service.spec.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\services\users.service.ts">

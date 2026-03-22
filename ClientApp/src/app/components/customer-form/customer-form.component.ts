@@ -1,9 +1,9 @@
 import { Component, OnInit, LOCALE_ID, Inject, ChangeDetectorRef } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
-import { CommonModule, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
+import { UserService } from '../../services/users.service';
 
 @Component({
   selector: 'customer-form',
@@ -16,6 +16,7 @@ export class CustomerFormComponent implements OnInit {
 
   customerForm: FormGroup;
   currentId?: number;
+  public isLoading: boolean = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -23,7 +24,8 @@ export class CustomerFormComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly customerService: CustomerService,
     private readonly changeDetectorRef: ChangeDetectorRef,
-    @Inject(LOCALE_ID) private readonly local: string
+    @Inject(LOCALE_ID) private readonly local: string,
+    public userService: UserService
   ) {
 
     this.customerForm = this.formBuilder.group({
@@ -64,6 +66,8 @@ export class CustomerFormComponent implements OnInit {
   }
 
   submitForm() {
+    this.isLoading = !this.isLoading;
+
     if (this.currentId) {
       this.updateDetails(this.currentId);
     } else {

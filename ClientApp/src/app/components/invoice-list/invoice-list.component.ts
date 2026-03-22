@@ -8,6 +8,7 @@ import { InvoiceStatusPipe } from '../../pipes/invoice-status.pipe'
 import { InvoiceCustomerPipe } from '../../pipes/invoice-customer.pipe'
 import { CustomerService } from '../../services/customer.service';
 import { Customer } from '../../models/customer';
+import { UserService } from '../../services/users.service';
 
 @Component({
   selector: 'invoice-list',
@@ -17,6 +18,7 @@ import { Customer } from '../../models/customer';
   standalone: true
 })
 export class InvoiceListComponent implements OnInit{
+
   public invoices: Invoice[] = [];
   public customers: Customer[] = [];
   private invoiceStatuses: { [statusId: number]: string; } = {};
@@ -30,8 +32,9 @@ export class InvoiceListComponent implements OnInit{
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly router: Router,
     private readonly customerService: CustomerService,
-    private elementRef: ElementRef,
-    private renderer: Renderer2
+    private readonly elementRef: ElementRef,
+    private readonly renderer: Renderer2,
+    public userService: UserService
   ) {
     const invoicesEndPoint = baseUrl + 'api/invoice/all';
     console.log("End point :" + invoicesEndPoint);    
@@ -57,10 +60,7 @@ export class InvoiceListComponent implements OnInit{
   }
 
   loadInvoiceStatuses() {
-    this.invoiceStatuses[0] = "UnPaid";
-    this.invoiceStatuses[1] = "Partially Paid";
-    this.invoiceStatuses[2] = "Paid";
-    this.invoiceStatuses[3] = "Over Due";
+    this.invoiceStatuses = ["UnPaid", "Partially Paid", "Paid", "Over Due"];
   }
 
   loadInvoices() {
@@ -86,7 +86,6 @@ export class InvoiceListComponent implements OnInit{
     console.log("filer el :" + this.filterElement.className);
     
     if (this.filterElement) {
-      //this.filterElement.style.display = '';
       this.renderer.removeClass(this.filterElement, 'filter');
     }
 
@@ -110,7 +109,6 @@ export class InvoiceListComponent implements OnInit{
       element.style.display = '';
     });
 
-    //this.filterElement.style.display = 'none';
     this.renderer.addClass(this.filterElement, 'filter');
   }
 
@@ -127,6 +125,5 @@ export class InvoiceListComponent implements OnInit{
     return this.invoices.filter(x => x.paidAmount)
       .reduce((sum, t) => sum + t.paidAmount, 0);
   }
-
 
 }

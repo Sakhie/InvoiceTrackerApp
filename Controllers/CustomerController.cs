@@ -1,4 +1,5 @@
 ﻿using InvoiceTrackerApp.Dto;
+using InvoiceTrackerApp.Filters;
 using InvoiceTrackerApp.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ namespace InvoiceTrackerApp.Controllers
     [ApiController]
     public class CustomerController(ICustomerService _customerService) : ControllerBase
     {
+        [TypeFilter(typeof(AuthenticationFilter))]       
         [HttpGet("all")]
         public async Task<IActionResult> GetAllCustomersAsync()
         {
@@ -20,6 +22,8 @@ namespace InvoiceTrackerApp.Controllers
             return Ok(customersResult);
         }
 
+        [TypeFilter(typeof(AuthenticationFilter))]
+        [RolesAuthorization("admin")]
         [HttpPost("add")]
         public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerDto customer)
         {
@@ -31,6 +35,7 @@ namespace InvoiceTrackerApp.Controllers
             return Ok(newCustomerResult);
         }
 
+        [TypeFilter(typeof(AuthenticationFilter))]        
         [HttpGet("get/{id}")]
         public async Task<IActionResult> GetCustomerByIdAsync(int id)
         {
@@ -41,7 +46,9 @@ namespace InvoiceTrackerApp.Controllers
             }
             return Ok(userResult);
         }
-                
+
+        [TypeFilter(typeof(AuthenticationFilter))]
+        [RolesAuthorization("admin")]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteCustomerAsync(int id)
         {
@@ -53,6 +60,8 @@ namespace InvoiceTrackerApp.Controllers
             return Ok(true);
         }
 
+        [TypeFilter(typeof(AuthenticationFilter))]
+        [RolesAuthorization("admin")]
         [HttpPut("update")]
         public async Task<IActionResult> UpdateCustomerAsync([FromBody] CustomerDto customer)
         {

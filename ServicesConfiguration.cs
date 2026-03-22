@@ -16,6 +16,7 @@ namespace InvoiceTrackerApp
         public static void AddAppSettings(this IServiceCollection services, ConfigurationManager configuration)
         {
             services.Configure<TokenSettings>(configuration.GetSection("TokenSettings"));
+            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
             services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection")
             ));

@@ -1,27 +1,25 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { LocalStorageService } from '../../services/local-storage.service';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UserService } from '../../services/users.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-nav-menu',
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.css']
+  styleUrls: ['./nav-menu.component.css'],
+  standalone: true
 })
 export class NavMenuComponent {
+
   isExpanded = false;
-  public userToken: string;
+  public userToken: string | undefined;
+  public currentUserInfo: any;
 
-  constructor(private readonly localStorageService: LocalStorageService,
-    private router: Router,
-    private changeDetectorRef: ChangeDetectorRef
+  constructor(
+    public userService: UserService
   ) {
-
-    this.userToken = localStorageService.getItem("userToken").subscribe(() => {
-      this.changeDetectorRef.detectChanges();
-    });
     
-
-    console.log("nav.....token: " + this.userToken);
   }
 
   collapse() {
@@ -33,12 +31,6 @@ export class NavMenuComponent {
   }
 
   logout() {
-
-    this.localStorageService.removeItem("userToken").subscribe(() => {
-      this.changeDetectorRef.detectChanges();
-    });    
-
-    console.log("logging out.........");
-    this.router.navigate(['']);
+    this.userService.logout();
   }
 }

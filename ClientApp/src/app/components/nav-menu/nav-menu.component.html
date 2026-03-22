@@ -17,29 +17,37 @@
            [ngClass]="{ show: isExpanded }">
         <ul class="navbar-nav flex-grow">                   
 
-          <li class="nav-item {{userToken ? 'isLoggedIn' : 'isLoggedOut'}}" [routerLinkActive]="['link-active']">
+          <li class="nav-item" *ngIf="userService.currentUserRole$ | async" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" [routerLink]="['/customer-list']">Customers</a>
           </li>
 
-          <li class="nav-item {{userToken ? 'isLoggedIn' : 'isLoggedOut'}}" [routerLinkActive]="['link-active']">
+          <li class="nav-item" *ngIf="userService.currentUser$ | async" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" [routerLink]="['/invoice-list']">Invoices</a>
           </li>
 
         </ul>
       </div>
 
-      <div class="text-end">
-        <a class="btn btn-outline-dark me-2 {{userToken ? 'isLoggedOut' : 'isLoggedIn'}}"
+      <div class="text-end flex-auto">
+        <div
+          class="me-2"
+          *ngIf="userService.currentUser$ | async"
+        >four@test.com</div>
+
+        <a class="btn btn-outline-dark me-2"
+           *ngIf="!(userService.currentUser$ | async)"
            [routerLink]="'/login'">
           <li class="bi-box-arrow-in-right"> login</li>
         </a>
 
-        <a class="btn btn-outline-dark me-2 {{userToken ? 'isLoggedIn' : 'isLoggedOut'}}"
+        <a class="btn btn-outline-dark me-2"
+           *ngIf="userService.currentUser$ | async"
            (click)="logout()">
           <li class="bi bi-box-arrow-right me-1"> logout</li>
         </a>
 
-        <a class="btn btn-outline-dark me-2 {{userToken ? 'isLoggedOut' : 'isLoggedIn'}}"
+        <a class="btn btn-outline-dark me-2"
+           *ngIf="!(userService.currentUser$ | async)"
            [routerLink]="'/signup'">
           <li class="bi-box-arrow-in-right"> signup</li>
         </a>

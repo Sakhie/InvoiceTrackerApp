@@ -7,6 +7,15 @@ export class LocalStorageService {
 
   constructor() { }
 
+  setItemWithExpiry(key: string, value: any, ttl: number) { // ttl in milliseconds
+    const now = new Date();
+    const item = {
+      value: value,
+      expiry: now.getTime() + ttl
+    };
+    localStorage.setItem(key, JSON.stringify(item));
+  }
+
   // Set item in local storage
   setItem(key: string, value: any): void {
     try {

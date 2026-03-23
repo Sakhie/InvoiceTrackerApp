@@ -77,34 +77,63 @@
 
   <p *ngIf="!invoices?.length"><em>Loading...</em></p>
 
-  <table class="table table-striped py-2 table-hover align-middle" *ngIf="invoices.length">
-    <thead>
-      <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Customer</th>
-        <th scope="col">InvoiceDate</th>
 
-        <th scope="col">DueDate</th>
-        <th scope="col">InvoiceAmount</th>
-        <th scope="col">PaidAmount</th>
-        <th scope="col">Balance</th>
-        <th scope="col">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let inv of invoices"
-          class="trans-row"
-          [ngClass]="inv.statusId | invoiceStatusPipe:true"
-          (click)="viewDetails(inv.invoiceNumber)">
-        <td>{{ inv.invoiceNumber }}</td>
-        <td>{{ inv.customerId | invoiceCustomerPipe: customers }}</td>
-        <td>{{ inv.invoiceDate | date:'MM/dd/yyyy, h:mm a' }}</td>
 
-        <td>{{ inv.dueDate | date:'MM/dd/yyyy, h:mm a' }}</td>
-        <td>{{ inv.invoiceAmount | currency:'R' }}</td>
-        <td>{{ inv.paidAmount | currency:'R'  }}</td>
-        <td>{{ inv.balance | currency:'R'  }}</td>
-        <td>{{ inv.statusId | invoiceStatusPipe }}</td>
-      </tr>
-    </tbody>
-  </table>
+
+
+
+  <div class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource">
+
+      <!-- Define your columns here (example) -->
+      <ng-container matColumnDef="invoiceNumber">
+        <mat-header-cell *matHeaderCellDef> Invoice Number </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.invoiceNumber}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="customer">
+        <mat-header-cell *matHeaderCellDef> Customer </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.customerId | invoiceCustomerPipe: customers }} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="invoiceDate">
+        <mat-header-cell *matHeaderCellDef> InvoiceDate </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.invoiceDate | date:'MM/dd/yyyy, h:mm a' }} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="dueDate">
+        <mat-header-cell *matHeaderCellDef> Due Date </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.dueDate | date:'MM/dd/yyyy, h:mm a' }} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="invoiceAmount">
+        <mat-header-cell *matHeaderCellDef> Invoice Amount </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.invoiceAmount | currency:'R' }} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="paidAmount">
+        <mat-header-cell *matHeaderCellDef> Paid Amount </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.paidAmount | currency:'R'  }} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="balance">
+        <mat-header-cell *matHeaderCellDef> Balance </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.balance | currency:'R'  }} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef> Status Id </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.statusId | invoiceStatusPipe }} </mat-cell>
+      </ng-container>
+
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"
+               (mousedown)="onRowClicked(row)"
+               class="trans-row"
+               [ngClass]="row.statusId | invoiceStatusPipe:true"
+               ></mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator
+                   [length]="totalItems"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   (page)="handlePageEvent($event)"
+                   showFirstLastButtons
+                   aria-label="Select page of items">
+    </mat-paginator>
+  </div>

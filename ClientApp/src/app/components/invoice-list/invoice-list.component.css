@@ -71,3 +71,36 @@ tr.Paid td {
 tr.OverDue td {
    color: red;
 }
+
+
+
+.mat-mdc-cell {
+  color: black;
+}
+.mat-mdc-row:nth-child(even) {
+  background-color: lavender; /* Or any desired color */
+}
+.mat-mdc-row:nth-child(odd) {
+  background-color: #ffffff; /* Or any desired color */
+}
+.mat-mdc-row:hover{
+    cursor: pointer;
+}
+
+
+
+mat-row.PartiallyPaid mat-cell {
+  color: blue;
+}
+
+mat-row.UnPaid mat-cell {
+  color: darkorange;
+}
+
+mat-row.Paid mat-cell {
+  color: forestgreen;
+}
+
+mat-row.OverDue mat-cell {
+  color: red;
+}

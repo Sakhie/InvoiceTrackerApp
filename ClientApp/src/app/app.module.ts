@@ -15,6 +15,12 @@ import { AuthGuard } from './guards/auth.guard';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { allInterceptor } from './interceptors/all.interceptor';
 import { FooterComponent } from './components/footer/footer.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -26,6 +32,8 @@ import { FooterComponent } from './components/footer/footer.component';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    MatPaginatorModule, MatTableModule, MatInputModule, MatFormFieldModule,
+
     NavMenuComponent,
     CustomerListComponent,
     CustomerFormComponent,
@@ -43,7 +51,8 @@ import { FooterComponent } from './components/footer/footer.component';
 
       { path: 'signup', component: Signup },
       { path: 'login', component: Signup }
-    ])
+    ]),
+    BrowserAnimationsModule
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor, allInterceptor]))

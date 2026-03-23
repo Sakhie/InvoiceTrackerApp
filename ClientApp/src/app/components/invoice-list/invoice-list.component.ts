@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit, ElementRef, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, ElementRef, Renderer2, AfterViewInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Invoice } from '../../models/invoice';
 import { InvoiceService } from '../../services/invoice.service';
@@ -9,21 +9,41 @@ import { InvoiceCustomerPipe } from '../../pipes/invoice-customer.pipe'
 import { CustomerService } from '../../services/customer.service';
 import { Customer } from '../../models/customer';
 import { UserService } from '../../services/users.service';
+import { MatPaginatorModule, PageEvent, MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
+const ELEMENT_DATA: Invoice[] = [];
 
 @Component({
   selector: 'invoice-list',
-  imports: [CommonModule, RouterLink, InvoiceStatusPipe, InvoiceCustomerPipe],
+  imports: [CommonModule, RouterLink, InvoiceStatusPipe, InvoiceCustomerPipe, MatPaginatorModule
+    , MatTableModule, MatInputModule, MatFormFieldModule
+  ],
   templateUrl: './invoice-list.component.html',
   styleUrls: ['./invoice-list.component.css'],
   standalone: true
 })
-export class InvoiceListComponent implements OnInit{
+export class InvoiceListComponent implements OnInit, AfterViewInit {
 
   public invoices: Invoice[] = [];
   public customers: Customer[] = [];
   private invoiceStatuses: { [statusId: number]: string; } = {};
   private filterElement: any;
   private filterCaptionElement: any;
+
+  
+  public itemsPerPage: number = 5;
+  
+  displayedColumns: string[] = ['invoiceNumber', 'customer', 'invoiceDate', 'dueDate',
+    'invoiceAmount', 'paidAmount', 'balance', 'status'];
+
+  dataSource = new MatTableDataSource<Invoice>();
+  totalItems = 0;
+  pageSize = 10;
+  currentPage = 0;
 
   constructor(
     http: HttpClient,
@@ -38,6 +58,20 @@ export class InvoiceListComponent implements OnInit{
   ) {
     const invoicesEndPoint = baseUrl + 'api/invoice/all';
     console.log("End point :" + invoicesEndPoint);    
+  }
+
+  pageEvent: PageEvent = null as unknown as PageEvent;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  handlePageEvent(event: PageEvent): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    //this.loadData(this.currentPage, this.pageSize);
   }
 
   ngOnInit(): void {
@@ -68,14 +102,18 @@ export class InvoiceListComponent implements OnInit{
       .subscribe((data) => {
 
         this.invoices = data;
-        console.log('list...items:' + this.invoices.length);
+
+        this.dataSource.data = data; // Assuming response has an 'items' array
+        this.totalItems = data.length; // Assuming response has a 'totalCount' property
 
         this.changeDetectorRef.detectChanges();
       });
   }
 
-  viewDetails(id: number) {
-    this.router.navigate(['/invoice-form/' + id])
+  onRowClicked(row: any) {
+    console.log("clicked..." + row.invoiceNumber);
+
+    this.router.navigate(['/invoice-form/' + row.invoiceNumber]);
   }
 
   AddNew() {    
